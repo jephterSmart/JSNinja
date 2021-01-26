@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animation with Js</title>
+    <script>
+         var centralTimer = {
+                timerId : 0,
+                timers: [],
+                add: function(fn){
+                    let v = fn.toString();
+                    this.timers.push(fn);
+                },
+                start: function()  {
+                    if(this.timerId) return;
+                    var self = this;
+                    (function runNext(){
+                        if(self.timers.length > 0){
+                            for(let i= 0; i < self.timers.length; i++){
+                                if(self.timers[i]() === false){
+                                    self.timers.splice(i,1);
+                                    --i;
+                                }
+                            }
+                            self.timerId = setTimeout(runNext,0);
+                        }
+                    })()
+                },
+                stop : () => {
+                    clearTimeout(this.timerId);
+                    this.timerId = 0;
+                }
+            }
+        window.onload = function(){
+            var box = document.getElementById('box');
+            var x =0 , y=10;
+            centralTimer.add(function() {  box.style.left = x + "px";  if (x++ > 70) return false;});
+            centralTimer.add(function() {  box.style.top = y + "px";  y += 2;  if (y > 300) return false;});
+            centralTimer.start();
+        }
+            
+           
+            
+        
+    </script>
+    <style>
+        div#box{
+            width : 200px;
+            height: 200px;
+            background-color: red;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <div id="box"></div>
+</body>
+</html>

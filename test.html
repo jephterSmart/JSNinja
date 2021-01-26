@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing</title>
+    <!-- <script src="./syncTest.js"></script>   
+    <script src="./addMethod.js"></script>  -->
+    <script>
+    function assert(value, desc) {           
+            var li = document.createElement("li");               
+            li.className = value ? "pass" : "fail";                      
+            li.appendChild(document.createTextNode(desc));        
+            window.document.getElementById("results").appendChild(li);   
+        }
+    function addMethod(obj,name,fn){
+      var old = obj[name]
+      obj[name] =function(){
+        if(fn.length === arguments.length){
+           return fn.apply(this,arguments);
+        }
+        else if(typeof fn == 'function'){
+          if(!old) return null;
+            return old.apply(this,arguments);
+        }
+    }
+}
+var ninjas = {
+        values: ["Dean Edwards", "Sam Stephenson", "Alex Russell"]  
+      };  
+        
+          addMethod(ninjas, "find", 
+          function(name){ 
+            var ret = [];    
+            for (var i = 0; i < this.values.length; i++)     
+              if (this.values[i].indexOf(name) == 0)       
+              ret.push(this.values[i]);    
+              return ret;  });  
+
+          addMethod(ninjas, "find", 
+          function(first, last){      
+            var ret = [];    
+            for (var i = 0; i < this.values.length; i++)   
+                if (this.values[i] == (first + " " + last))        
+                ret.push(this.values[i]);    return ret;  });
+       addMethod(ninjas, "find", 
+        function(){         
+            return this.values;  }); 
+      window.onload = function(){
+        assert(ninjas.find().length == 3,      "Found all ninjas");  
+      assert(ninjas.find("Sam").length == 1,  "Found ninja by first name");  
+      assert(ninjas.find("Dean", "Edwards").length == 1, "Found ninja by first and last name"); 
+      assert(ninjas.find("Alex", "Russell", "Jr") == null, "Found nothing");
+      } 
+      
+      
+    </script>
+    <style>     
+    #results li.pass { color: green; }     
+      #results li.fail { color: red; }   
+    </style>
+</head>
+<body>
+    <ul id="results"></ul>   
+    <object></object>
+</body>
+</html>
