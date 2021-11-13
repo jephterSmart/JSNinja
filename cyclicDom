@@ -1,0 +1,96 @@
+// This is the structure given
+
+/* 
+  <p id="words">
+ <span>The</span> <span>brown</span> <span>strong</span> <span>fox</span>
+ <span>jumps</span> <span>over</span> <span>the</span> <span>lazy</span> <span>dog</span>
+  </p>
+*/
+
+//This is the solution... 
+let p = document.getElementById('words');
+let spans = p.children;
+for(let i=0; i<spans.length; i++){
+
+	
+	spans[i].onclick = function(e){
+    
+	let cur = e.target;
+    
+	let next = e.target.nextElementSibling;
+    
+	if(!next){
+    //Then we know we're at the end of line
+    
+		next = e.target.parentNode.firstChild;
+    
+		}
+//then lets us get other siblings
+
+	let beforeCurSib = [];
+
+	let beforeCur = e.target.previousElementSibling;
+	
+while(beforeCur){
+    beforeCurSib.push(beforeCur);
+		
+beforeCur = beforeCur.previousElementSibling;
+
+	}
+	
+let afterNextSibling = [];
+
+	let afterNext = next.nextElementSibling;
+	
+while(afterNext){
+    
+		if(next == e.target.parentNode.firstChild){
+       
+		 break;
+    
+		}
+		else{
+    
+		afterNextSibling.push(afterNext);	
+		}
+
+		afterNext = afterNext.nextElementSibling;
+	}
+
+	cur.setAttribute('style','color:red; cursor:pointer;');
+
+	let newSpans = [...beforeCurSib,next,cur,...afterNextSibling];
+ 
+	if(next == e.target.parentNode.firstChild){
+   
+		let ind = newSpans.findIndex(item => item == cur) ;
+		newSpans.splice(ind,1);
+		newSpans.unshift(cur);
+		newSpans.pop();
+	}
+	let spa = p.children;
+        
+	for(let s of spa){
+            
+		p.removeChild(s);
+        
+	}
+    
+	
+	
+	for(let a of newSpans){
+		a.innerText = " " + a.innerText + " ";
+		if(a != e.target) {
+			a.setAttribute('style','color: unset; cursor:pointer;');
+			
+				
+		}
+
+		
+		p.appendChild(a);
+    
+	}
+
+    }
+
+}
